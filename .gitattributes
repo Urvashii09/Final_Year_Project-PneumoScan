@@ -1,0 +1,19 @@
+# Set default behavior to automatically normalize line endings
+* text=auto
+
+# Force Python files to use LF
+*.py text eol=lf
+
+# HTML, CSS, JS files
+*.html text eol=lf
+*.css text eol=lf
+*.js text eol=lf
+
+# Binary files (don’t modify line endings)
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.h5 binary
+*.db binary
