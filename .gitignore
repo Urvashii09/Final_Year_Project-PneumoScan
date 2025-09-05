@@ -1,4 +1,14 @@
+# Ignore virtual environments
+venv/
 keras/
+
+# Ignore database files
 instance/*.db
+
+# Python cache
 __pycache__/
 *.pyc
+
+# Other unwanted files
+*.log
+.DS_Store
