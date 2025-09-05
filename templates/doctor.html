@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Nearby Doctors{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <h2 class="text-center mb-4 text-primary">Nearby Doctors and Radiologists</h2>
+
+    <!-- Google Maps Embed -->
+    <div class="ratio ratio-16x9 mb-4">
+        <iframe
+            src="https://www.google.com/maps/embed/v1/search?key=YOUR_GOOGLE_MAPS_API_KEY&q=hospitals+near+me"
+            allowfullscreen>
+        </iframe>
+    </div>
+
+    <!-- Sample Doctor Info -->
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Dr. Radhika Sharma</h5>
+                    <p class="card-text">Chest Specialist, City Health Clinic</p>
+                    <p class="text-muted">Contact: +91 9876543210</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Dr. Amit Verma</h5>
+                    <p class="card-text">Pulmonologist, Sunrise Hospital</p>
+                    <p class="text-muted">Contact: +91 9123456789</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
