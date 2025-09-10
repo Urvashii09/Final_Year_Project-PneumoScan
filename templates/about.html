@@ -1,48 +1,179 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <title>About</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" />
-    <style>
-        body {
-            background-color: #420d0dde;
-            color: white;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            text-align: center;
-        }
-        .about-container {
-            max-width: 600px;
-            background-color: #1a1212d2;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 0 15px rgba(42, 157, 143, 0.6);
-        }
-        h1 {
-            color: #2a9d8f;
-            margin-bottom: 20px;
-        }
-        p {
-            font-size: 1.2rem;
-            line-height: 1.5;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <title>About Us</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet" />
+  <style>
+    body {
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      color: #f5f5f5;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .about-section {
+      padding: 60px 20px;
+      text-align: center;
+    }
+
+    .about-section h1 {
+      font-size: 2.5rem;
+      font-weight: bold;
+      color: #00e5ff;
+      margin-bottom: 20px;
+    }
+
+    .about-section p {
+      font-size: 1.2rem;
+      max-width: 800px;
+      margin: 0 auto 40px;
+      color: #e0e0e0;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.08);
+      border: none;
+      border-radius: 20px;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.5);
+    }
+
+    .card h5 {
+      color: #00e5ff;
+      font-weight: bold;
+    }
+
+    .card p {
+      color: #ddd;
+    }
+
+    /* Team Section */
+    .team-section {
+      padding: 60px 20px;
+    }
+
+    .team-section h2 {
+      font-size: 2rem;
+      font-weight: bold;
+      color: #00e5ff;
+      margin-bottom: 40px;
+      text-align: center;
+    }
+
+    .team-card {
+      background: rgba(255, 255, 255, 0.08);
+      border: none;
+      border-radius: 15px;
+      text-align: center;
+      padding: 25px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .team-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    .team-card img {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      margin-bottom: 15px;
+      border: 3px solid #00e5ff;
+    }
+
+    .team-card h5 {
+      color: #00e5ff;
+      margin-bottom: 5px;
+    }
+
+    .team-card p {
+      color: #ccc;
+      font-size: 0.95rem;
+    }
+  </style>
 </head>
 <body>
-    <div class="about-container">
-        <h1>About Our Pneumonia Detection App</h1>
-        <p>This application leverages advanced AI and deep learning models to accurately detect pneumonia from chest X-ray images. The final objective is to integrate the trained model into a full-stack web 
-application that allows users to upload chest X-ray images and receive 
-predictions regarding the presence of pneumonia. The application will also 
-include features such as real-time analysis, intuitive user interface, medical 
-report generation, and history tracking. This makes the system practical and 
-ready for deployment in real-world clinical environments or as a diagnostic aid 
-for medical professionals. </p>
+  <section class="about-section animate__animated animate__fadeInUp">
+    <h1>About Our Project</h1>
+    <p>
+      This project is an AI-powered Pneumonia Detection System designed to assist doctors and patients
+      by analyzing chest X-ray images. With the power of Machine Learning, we aim to provide quick,
+      reliable, and efficient preliminary diagnosis to improve healthcare accessibility.
+    </p>
+
+    <div class="container mt-5">
+      <div class="row g-4">
+        <div class="col-md-4">
+          <div class="card p-4 h-100 text-center">
+            <h5><i class="fa-solid fa-brain me-2"></i> AI Technology</h5>
+            <p>We leverage Deep Learning to analyze chest X-rays with high accuracy and reliability.</p>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="card p-4 h-100 text-center">
+            <h5><i class="fa-solid fa-user-doctor me-2"></i> Doctor Friendly</h5>
+            <p>Designed to assist radiologists and pulmonologists with quick decision-making tools.</p>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="card p-4 h-100 text-center">
+            <h5><i class="fa-solid fa-users me-2"></i> Patient Focused</h5>
+            <p>Our system ensures easy accessibility for patients, bridging gaps in healthcare services.</p>
+          </div>
+        </div>
+      </div>
     </div>
+  </section>
+
+  
+  <!-- Team Members Section -->
+<section class="team-section animate__animated animate__fadeInUp">
+  <div class="container">
+    <h2 class="text-center mb-5">Meet Our Team</h2>
+    <div class="row g-4">
+
+      <!-- Project Lead & Developer -->
+      <div class="col-md-4">
+        <div class="team-card p-4 h-100 text-center">
+          <img src="{{ url_for('static', filename='images/i3.jpeg') }}" alt="Urvashi Mishra">
+          <h5 class="mt-3">Urvashi Mishra</h5>
+          <p class="mt-2">Project Lead & Developer<br>Oversees the project, coordinates the team, and contributes to both frontend and backend development.</p>
+        </div>
+      </div>
+
+      <!-- AI/ML & Backend Developer -->
+      <div class="col-md-4">
+        <div class="team-card p-4 h-100 text-center">
+          <img src="{{ url_for('static', filename='images/i2.jpeg') }}" alt="Priyanshu Singh">
+          <h5 class="mt-3">Priyanshu Singh</h5>
+          <p class="mt-2">AI/ML & Backend Developer<br>Trains the AI model, integrates it into the backend, and handles the prediction APIs for the system.</p>
+        </div>
+      </div>
+
+      <!-- Frontend Designer -->
+      <div class="col-md-4">
+        <div class="team-card p-4 h-100 text-center">
+          <img src="{{ url_for('static', filename='images/i1.jpeg') }}" alt="Shivaditya Singh">
+          <h5 class="mt-3">Shivaditya Singh</h5>
+          <p class="mt-2">Frontend Designer<br>Designs the user interface, ensures responsive layout, smooth animations, and a user-friendly experience.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/js/all.min.js"></script>
 </body>
 </html>
-

@@ -3,37 +3,75 @@
 
 {% block content %}
 <div class="container my-5">
-    <h2 class="text-center mb-4 text-primary">Nearby Doctors and Radiologists</h2>
+    <h2 class="text-center mb-4 fw-bold text-info">
+        <i class="fa-solid fa-user-doctor me-2"></i> Nearby Doctors and Radiologists
+    </h2>
 
     <!-- Google Maps Embed -->
-    <div class="ratio ratio-16x9 mb-4">
-        <iframe
-            src="https://www.google.com/maps/embed/v1/search?key=YOUR_GOOGLE_MAPS_API_KEY&q=hospitals+near+me"
-            allowfullscreen>
-        </iframe>
+    <div class="ratio ratio-16x9 mb-5 rounded shadow-lg border border-info">
+        
+        <iframe src="https://www.google.com/maps/embed?pb=!1m16!1m12!1m3!1d113988.98898988815!2d80.82450673154733!3d26.7712998097975!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!2m1!1shospitals%20near%20me!5e0!3m2!1sen!2sin!4v1757500526494!5m2!1sen!2sin" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>>
+        
     </div>
 
-    <!-- Sample Doctor Info -->
-    <div class="row">
-        <div class="col-md-6 mb-3">
-            <div class="card shadow-sm">
+    <!-- Doctor Info Cards -->
+    <div class="row g-4">
+        <!-- Doctor 1 -->
+        <div class="col-md-6">
+            <div class="card border-0 shadow-lg h-100 hover-shadow">
                 <div class="card-body">
-                    <h5 class="card-title">Dr. Radhika Sharma</h5>
+                    <h5 class="card-title text-primary">
+                        <i class="fa-solid fa-stethoscope me-2"></i> Dr. Radhika Sharma
+                    </h5>
                     <p class="card-text">Chest Specialist, City Health Clinic</p>
-                    <p class="text-muted">Contact: +91 9876543210</p>
+                    <p class="text-muted mb-1">
+                        <i class="fa-solid fa-phone me-2 text-success"></i> +91 9876543210
+                    </p>
+                    <p class="text-muted">
+                        <i class="fa-solid fa-location-dot me-2 text-danger"></i> Lucknow, Uttar Pradesh
+                    </p>
+                </div>
+                <div class="card-footer bg-transparent border-0 text-center">
+                    <a href="tel:+919876543210" class="btn btn-sm btn-success">
+                        <i class="fa-solid fa-phone me-1"></i> Call Now
+                    </a>
                 </div>
             </div>
         </div>
 
-        <div class="col-md-6 mb-3">
-            <div class="card shadow-sm">
+        <!-- Doctor 2 -->
+        <div class="col-md-6">
+            <div class="card border-0 shadow-lg h-100 hover-shadow">
                 <div class="card-body">
-                    <h5 class="card-title">Dr. Amit Verma</h5>
+                    <h5 class="card-title text-primary">
+                        <i class="fa-solid fa-lungs me-2"></i> Dr. Amit Verma
+                    </h5>
                     <p class="card-text">Pulmonologist, Sunrise Hospital</p>
-                    <p class="text-muted">Contact: +91 9123456789</p>
+                    <p class="text-muted mb-1">
+                        <i class="fa-solid fa-phone me-2 text-success"></i> +91 9123456789
+                    </p>
+                    <p class="text-muted">
+                        <i class="fa-solid fa-location-dot me-2 text-danger"></i> Kanpur, Uttar Pradesh
+                    </p>
+                </div>
+                <div class="card-footer bg-transparent border-0 text-center">
+                    <a href="tel:+919123456789" class="btn btn-sm btn-success">
+                        <i class="fa-solid fa-phone me-1"></i> Call Now
+                    </a>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<!-- Custom Hover Effect -->
+<style>
+    .hover-shadow {
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .hover-shadow:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 1rem 2rem rgba(0, 255, 200, 0.25);
+    }
+</style>
 {% endblock %}

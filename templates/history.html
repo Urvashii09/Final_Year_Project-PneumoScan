@@ -1,137 +1,57 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8" />
-    <title>Prediction History</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 30px;
-            background-color: #eaf0f5;
-            color: #000;
-        }
+{% extends "base.html" %}
+{% block title %}Prediction History{% endblock %}
 
-        h2 {
-            text-align: center;
-            margin-bottom: 30px;
-            color: #0077cc;
-        }
-
-        table {
-            width: 90%;
-            margin: 0 auto;
-            border-collapse: collapse;
-            background-color: #fff;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
-
-        th, td {
-            padding: 12px 15px;
-            text-align: center;
-            border-bottom: 1px solid #ddd;
-        }
-
-        th {
-            background-color: #0077cc;
-            color: white;
-        }
-
-        img {
-            max-width: 100px;
-            height: auto;
-            border-radius: 4px;
-        }
-
-        .no-history {
-            text-align: center;
-            font-size: 18px;
-            color: #555;
-            margin-top: 50px;
-        }
-
-        .btn-predict {
-            background-color: #0077cc;
-            color: white;
-            padding: 12px 24px;
-            border: none;
-            border-radius: 5px;
-            font-size: 16px;
-            cursor: pointer;
-            margin-top: 30px;
-            display: inline-block;
-            text-decoration: none;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-        }
-
-        .btn-predict:hover {
-            background-color: #005fa3;
-            transform: scale(1.05);
-        }
-
-        .button-container {
-            text-align: center;
-            margin-top: 20px;
-        }
-
-        @media (prefers-color-scheme: dark) {
-            body {
-                background-color: #121212;
-                color: #e0e0e0;
-            }
-
-            table {
-                background-color: #1f1f1f;
-                color: #e0e0e0;
-            }
-
-            th {
-                background-color: #2a9d8f;
-            }
-
-            .btn-predict {
-                background-color: #2a9d8f;
-                color: white;
-            }
-
-            .btn-predict:hover {
-                background-color: #21867a;
-            }
-        }
-    </style>
-</head>
-<body>
-    <h2>Your Prediction History</h2>
+{% block content %}
+<div class="container my-5">
+    <h2 class="text-center mb-4 fw-bold text-info">
+        <i class="fa-solid fa-clock-rotate-left me-2"></i> Your Prediction History
+    </h2>
 
     {% if records %}
-    <table>
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>Image</th>
-                <th>Diagnosis</th>
-                <th>Date & Time</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for record in records %}
-            <tr>
-                <td>{{ loop.index }}</td>
-                <td>
-                    <img src="{{ url_for('static', filename=record.image_path.replace('static/', '')) }}" alt="X-ray Image" />
-                </td>
-                <td>{{ record.result }}</td>
-                <td>{{ record.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    <div class="table-responsive">
+        <table class="table table-hover table-bordered shadow-sm align-middle text-center">
+            <thead class="table-info">
+                <tr>
+                    <th>#</th>
+                    <th>Image</th>
+                    <th>Diagnosis</th>
+                    <th>Date & Time</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for record in records %}
+                <tr>
+                    <td class="fw-bold">{{ loop.index }}</td>
+                    <td>
+                        <img src="{{ url_for('static', filename=record.image_path.replace('static/', '')) }}"
+                             alt="X-ray Image"
+                             class="img-thumbnail"
+                             style="max-width: 120px;" />
+                    </td>
+                    <td>
+                        {% if record.result == "Pneumonia" %}
+                            <span class="badge bg-danger px-3 py-2">Pneumonia</span>
+                        {% else %}
+                            <span class="badge bg-success px-3 py-2">Normal</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ record.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
     {% else %}
-        <p class="no-history">No prediction history available.</p>
+        <p class="text-center text-muted mt-5 fs-5">
+            <i class="fa-solid fa-circle-info me-2"></i>
+            No prediction history available.
+        </p>
     {% endif %}
 
-    <div class="button-container">
-        <a href="{{ url_for('predict') }}" class="btn-predict">Predict Again</a>
+    <div class="text-center mt-4">
+        <a href="{{ url_for('predict') }}" class="btn btn-info btn-lg text-white shadow-sm">
+            <i class="fa-solid fa-x-ray me-2"></i> Predict Again
+        </a>
     </div>
-</body>
-</html>
+</div>
+{% endblock %}

@@ -160,7 +160,31 @@ def about():
 
 @app.route('/contact')
 def contact():
-    return render_template('contact.html')
+    return render_template('contact.html')  # Make sure contact.html exists in /templates
+
+
+@app.route('/contact_submit', methods=['POST'])
+def contact_submit():
+    try:
+        name = request.form.get('name')
+        email = request.form.get('email')
+        message = request.form.get('message')
+
+        if not name or not email or not message:
+            flash("Please fill all fields")  # Optional: use flash to show on page
+            return redirect(url_for('contact'))
+
+        # Print to console for now
+        print(f"Message from {name} ({email}): {message}")
+
+        flash("Message sent successfully!")
+        return redirect(url_for('contact'))
+
+    except Exception as e:
+        print(e)
+        flash("Internal Server Error")
+        return redirect(url_for('contact'))
+
 
 @app.route('/doctors')
 @login_required
