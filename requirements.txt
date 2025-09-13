@@ -3,6 +3,7 @@ flask_sqlalchemy
 flask_login
 tensorflow
 keras
+keras-preprocessing
 numpy
 Pillow
 reportlab
