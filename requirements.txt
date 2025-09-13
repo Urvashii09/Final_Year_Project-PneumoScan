@@ -1,0 +1,9 @@
+Flask
+flask_sqlalchemy
+flask_login
+tensorflow
+keras
+numpy
+Pillow
+reportlab
+gunicorn
