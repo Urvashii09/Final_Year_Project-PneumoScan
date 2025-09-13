@@ -13,6 +13,9 @@ import os
 import io
 from datetime import datetime
 
+import os
+app.secret_key = os.environ.get('SECRET_KEY')
+
 # --- App Initialization ---
 app = Flask(__name__)
 app.secret_key = 'your_secret_key_here'
