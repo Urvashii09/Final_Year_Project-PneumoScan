@@ -1,23 +1,22 @@
 import os
-from keras.models import load_model
+import io
+from datetime import datetime
+import numpy as np
 from flask import Flask, render_template, request, redirect, url_for, session, flash, send_file
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, login_user, login_required, logout_user, UserMixin, current_user
+from werkzeug.security import generate_password_hash, check_password_hash
 from keras.models import load_model
 from keras_preprocessing.image import load_img, img_to_array
 from reportlab.pdfgen import canvas
-from werkzeug.security import generate_password_hash, check_password_hash
 
-import numpy as np
-import os
-import io
-from datetime import datetime
-
+# --- App Initialization ---
 app = Flask(__name__)
 app.secret_key = os.environ.get('SECRET_KEY', 'your_secret_key_here')
 
 # --- Database Configuration ---
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
 # --- Login Manager Setup ---
@@ -26,16 +25,9 @@ login_manager.init_app(app)
 login_manager.login_view = 'login'
 
 # --- Load Pretrained CNN Model ---
-# model = load_model('models/pneu.cnn.model.h5')
-# Get the folder where app.py is located
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-
-# Build the full path to the model
 model_path = os.path.join(BASE_DIR, 'models', 'pneu.cnn.model.h5')
-
-# Load the model
 model = load_model(model_path)
-
 
 # --- User Model ---
 class User(UserMixin, db.Model):
@@ -71,7 +63,6 @@ def login():
         username = request.form['username']
         password = request.form['password']
         user = User.query.filter_by(username=username).first()
-
         if user and check_password_hash(user.password, password):
             login_user(user)
             return redirect(url_for('home'))
@@ -84,7 +75,6 @@ def signup():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-
         if User.query.filter_by(username=username).first():
             flash('Username already exists!')
         else:
@@ -110,12 +100,10 @@ def predict():
         image_path = os.path.join('static', imagefile.filename)
         imagefile.save(image_path)
 
-        # Preprocess the image
         img = load_img(image_path, target_size=(500, 500), color_mode='grayscale')
         x = img_to_array(img) / 255.0
         x = np.expand_dims(x, axis=0)
 
-        # Predict
         probability = float(model.predict(x)[0][0])
         is_positive = probability >= 0.5
         label = "Positive for Pneumonia" if is_positive else "Healthy (Negative)"
@@ -124,7 +112,6 @@ def predict():
 
         session['diagnosis'] = prediction_text
 
-        # Save to prediction history
         new_record = History(user_id=current_user.id, image_path=image_path, result=prediction_text)
         db.session.add(new_record)
         db.session.commit()
@@ -159,37 +146,28 @@ def about():
 
 @app.route('/contact')
 def contact():
-    return render_template('contact.html')  # Make sure contact.html exists in /templates
-
+    return render_template('contact.html')
 
 @app.route('/contact_submit', methods=['POST'])
 def contact_submit():
-    try:
-        name = request.form.get('name')
-        email = request.form.get('email')
-        message = request.form.get('message')
+    name = request.form.get('name')
+    email = request.form.get('email')
+    message = request.form.get('message')
 
-        if not name or not email or not message:
-            flash("Please fill all fields")  # Optional: use flash to show on page
-            return redirect(url_for('contact'))
-
-        # Print to console for now
-        print(f"Message from {name} ({email}): {message}")
-
-        flash("Message sent successfully!")
+    if not name or not email or not message:
+        flash("Please fill all fields")
         return redirect(url_for('contact'))
 
-    except Exception as e:
-        print(e)
-        flash("Internal Server Error")
-        return redirect(url_for('contact'))
-
+    print(f"Message from {name} ({email}): {message}")
+    flash("Message sent successfully!")
+    return redirect(url_for('contact'))
 
 @app.route('/doctors')
 @login_required
 def doctors():
-    return render_template('doctor.html')  # Make sure doctor.html is in /templates
+    return render_template('doctor.html')
 
 # --- Main ---
 if __name__ == '__main__':
-    app.run(debug=True)
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port, debug=False)

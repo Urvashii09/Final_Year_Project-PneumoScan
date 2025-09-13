@@ -1,10 +1,9 @@
 Flask
-flask_sqlalchemy
-flask_login
+Flask-Login
+Flask-SQLAlchemy
+numpy
 tensorflow
 keras
 keras-preprocessing
-numpy
-Pillow
 reportlab
 gunicorn
