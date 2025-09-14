@@ -78,13 +78,13 @@ def signup():
         password = request.form['password'] 
         if User.query.filter_by(username=username).first(): 
             flash('Username already exists!') 
-    else: 
-        hashed_password = generate_password_hash(password) 
-        new_user = User(username=username, password=hashed_password) 
-        db.session.add(new_user) 
-        db.session.commit() 
-        flash('Signup successful. Please log in.') 
-        return redirect(url_for('login')) 
+        else: 
+            hashed_password = generate_password_hash(password) 
+            new_user = User(username=username, password=hashed_password) 
+            db.session.add(new_user) 
+            db.session.commit() 
+            flash('Signup successful. Please log in.') 
+            return redirect(url_for('login')) 
     return render_template('signup.html') 
 @app.route('/logout') 
 @login_required 
