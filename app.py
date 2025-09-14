@@ -113,7 +113,7 @@ def predict():
             imagefile.save(image_path)
 
             # Preprocess the image
-            img = load_img(image_path, target_size=(224, 224), color_mode='grayscale')
+            img = load_img(image_path, target_size=(500, 500), color_mode='grayscale')
             x = img_to_array(img) / 255.0
             x = np.expand_dims(x, axis=0)
 
