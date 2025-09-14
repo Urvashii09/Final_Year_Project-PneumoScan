@@ -134,8 +134,11 @@ def history():
     return render_template('history.html', records=records) 
 
 @app.route('/about') 
-def about(): return render_template('about.html') @app.route('/contact') 
-def contact(): return render_template('contact.html') 
+def about(): 
+    return render_template('about.html') 
+@app.route('/contact') 
+def contact(): 
+    return render_template('contact.html') 
 # Make sure contact.html exists in /templates 
 @app.route('/contact_submit', methods=['POST']) 
 def contact_submit(): 
