@@ -91,30 +91,65 @@ def signup():
 def logout(): 
     logout_user() 
     return redirect(url_for('home')) 
-@app.route('/predict', methods=['GET', 'POST']) 
-@login_required 
-def predict(): 
-    if request.method == 'POST': 
-        imagefile = request.files['imagefile'] 
-        image_path = os.path.join('static', imagefile.filename) 
-        imagefile.save(image_path) 
-        # Preprocess the image 
-        img = load_img(image_path, target_size=(500, 500), color_mode='grayscale') 
-        x = img_to_array(img) / 255.0 
-        x = np.expand_dims(x, axis=0) 
-        # Predict 
-        probability = float(model.predict(x)[0][0]) 
-        is_positive = probability >= 0.5 
-        label = "Positive for Pneumonia" if is_positive else "Healthy (Negative)" 
-        confidence = probability * 100 if is_positive else (1 - probability) * 100 
-        prediction_text = f"{label} ({confidence:.2f}%)" 
-        session['diagnosis'] = prediction_text 
-        # Save to prediction history 
-        new_record = History(user_id=current_user.id, image_path=image_path, result=prediction_text) 
-        db.session.add(new_record) 
-        db.session.commit() 
-        return render_template('index.html', prediction=prediction_text, imagePath=image_path, confidence=confidence, is_positive=is_positive) 
-    return render_template('index.html') 
+@app.route('/predict', methods=['GET', 'POST'])
+@login_required
+def predict():
+    if request.method == 'POST':
+        if 'imagefile' not in request.files:
+            flash("No file part in the request")
+            return redirect(request.url)
+
+        imagefile = request.files['imagefile']
+
+        if imagefile.filename == '':
+            flash("No file selected")
+            return redirect(request.url)
+
+        try:
+            # Save the uploaded file to /static/uploads
+            upload_folder = os.path.join('static', 'uploads')
+            os.makedirs(upload_folder, exist_ok=True)
+            image_path = os.path.join(upload_folder, imagefile.filename)
+            imagefile.save(image_path)
+
+            # Preprocess the image
+            img = load_img(image_path, target_size=(500, 500), color_mode='grayscale')
+            x = img_to_array(img) / 255.0
+            x = np.expand_dims(x, axis=0)
+
+            # Predict
+            probability = float(model.predict(x)[0][0])
+            is_positive = probability >= 0.5
+            label = "Positive for Pneumonia" if is_positive else "Healthy (Negative)"
+            confidence = probability * 100 if is_positive else (1 - probability) * 100
+            prediction_text = f"{label} ({confidence:.2f}%)"
+
+            # Debug: Print model output
+            print(f"[DEBUG] Raw model output: {model.predict(x)}")
+            print(f"[DEBUG] Prediction: {prediction_text}, probability: {probability}")
+
+            # Save to session
+            session['diagnosis'] = prediction_text
+
+            # Save to prediction history
+            new_record = History(user_id=current_user.id, image_path=image_path, result=prediction_text)
+            db.session.add(new_record)
+            db.session.commit()
+
+            return render_template('index.html', 
+                                   prediction=prediction_text, 
+                                   imagePath=image_path, 
+                                   confidence=confidence, 
+                                   is_positive=is_positive)
+
+        except Exception as e:
+            print(f"[ERROR] Prediction failed: {e}")
+            flash("Prediction failed. Please try again.")
+            return redirect(request.url)
+
+    # GET request
+    return render_template('index.html')
+
 @app.route('/generate-pdf') 
 @login_required 
 def generate_pdf(): 
