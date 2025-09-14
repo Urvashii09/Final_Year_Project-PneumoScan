@@ -62,11 +62,12 @@ def home():
 @app.route('/login', methods=['GET', 'POST']) 
 def login(): 
     if request.method == 'POST': 
-        username = request.form['username'] 
+        username = request.form['username'].strip()
         password = request.form['password'] 
         user = User.query.filter_by(username=username).first() 
         if user and check_password_hash(user.password, password): 
-            login_user(user) 
+            login_user(user)
+            flash('Login Successful') 
             return redirect(url_for('home')) 
         else: flash('Invalid credentials.') 
     return render_template('login.html') 
@@ -75,8 +76,8 @@ def signup():
     if request.method == 'POST': 
         username = request.form['username'] 
         password = request.form['password'] 
-    if User.query.filter_by(username=username).first(): 
-        flash('Username already exists!') 
+        if User.query.filter_by(username=username).first(): 
+            flash('Username already exists!') 
     else: 
         hashed_password = generate_password_hash(password) 
         new_user = User(username=username, password=hashed_password) 
