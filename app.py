@@ -11,6 +11,8 @@ import numpy as np
 import os 
 import io 
 from datetime import datetime 
+import traceback
+from flask import jsonify
 
 app = Flask(__name__) 
 app.secret_key = os.environ.get('SECRET_KEY', 'your_secret_key_here') 
@@ -95,37 +97,28 @@ def signup():
 def logout(): 
     logout_user() 
     return redirect(url_for('home')) 
-@app.route('/predict', methods=['GET', 'POST'])
+@app.route('/predict', methods=['POST'])
 def predict():
     try:
-        if 'file' not in request.files:
-            return "No file part", 400
-
         file = request.files['file']
-        if file.filename == '':
-            return "No selected file", 400
-
         # Save file temporarily
         filepath = os.path.join("uploads", file.filename)
         file.save(filepath)
-        print(f"✅ File saved at {filepath}")
 
-        # Preprocess
-        img = load_img(filepath, target_size=(224, 224), color_mode='grayscale')
-        x = img_to_array(img) / 255.0
-        x = np.expand_dims(x, axis=0)
-        print("✅ Image preprocessed")
+        # Preprocess and predict
+        img = image.load_img(filepath, target_size=(224, 224))
+        img_array = image.img_to_array(img)
+        img_array = np.expand_dims(img_array, axis=0) / 255.0
 
-        # Predict
-        prediction = model.predict(x)
-        print(f"✅ Prediction: {prediction}")
+        prediction = model.predict(img_array)
+        result = "Pneumonia" if prediction[0][0] > 0.5 else "Normal"
 
-        return str(prediction)
+        return jsonify({"prediction": result})
 
     except Exception as e:
-        error_message = traceback.format_exc()
-        print("❌ ERROR during prediction:", error_message)
-        return f"Internal Server Error:\n{error_message}", 500
+        print("❌ ERROR in /predict:", str(e))
+        print(traceback.format_exc())
+        return jsonify({"error": str(e)}), 500
         #     # Debug: Print model output
         #     print(f"[DEBUG] Raw model output: {model.predict(x)}")
         #     print(f"[DEBUG] Prediction: {prediction_text}, probability: {probability}")
