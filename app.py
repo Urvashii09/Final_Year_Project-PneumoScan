@@ -97,13 +97,24 @@ def signup():
 def logout(): 
     logout_user() 
     return redirect(url_for('home')) 
+
 @app.route('/predict', methods=['POST'])
 def predict():
     try:
+        if 'file' not in request.files:
+            return jsonify({"error": "No file part"}), 400
+
         file = request.files['file']
+        if file.filename == '':
+            return jsonify({"error": "No selected file"}), 400
+
+        # ✅ Make sure the uploads folder exists
+        os.makedirs("uploads", exist_ok=True)
+
         # Save file temporarily
         filepath = os.path.join("uploads", file.filename)
         file.save(filepath)
+        print(f"✅ File saved at {filepath}")
 
         # Preprocess and predict
         img = image.load_img(filepath, target_size=(224, 224))
@@ -113,12 +124,14 @@ def predict():
         prediction = model.predict(img_array)
         result = "Pneumonia" if prediction[0][0] > 0.5 else "Normal"
 
-        return jsonify({"prediction": result})
+        print(f"✅ Prediction: {result} ({prediction[0][0]})")
+        return jsonify({"prediction": result, "confidence": float(prediction[0][0])})
 
     except Exception as e:
         print("❌ ERROR in /predict:", str(e))
         print(traceback.format_exc())
-        return jsonify({"error": str(e)}), 500
+        return jsonify({"error": str(e), "trace": traceback.format_exc()}), 500
+
         #     # Debug: Print model output
         #     print(f"[DEBUG] Raw model output: {model.predict(x)}")
         #     print(f"[DEBUG] Prediction: {prediction_text}, probability: {probability}")
