@@ -94,58 +94,57 @@ def logout():
 @app.route('/predict', methods=['GET', 'POST'])
 @login_required
 def predict():
-    if request.method == 'POST':
-        if 'imagefile' not in request.files:
-            flash("No file part in the request")
-            return redirect(request.url)
+    try:
+        if 'file' not in request.files:
+            return "No file part", 400
 
-        imagefile = request.files['imagefile']
+        file = request.files['file']
+        if file.filename == '':
+            return "No selected file", 400
 
-        if imagefile.filename == '':
-            flash("No file selected")
-            return redirect(request.url)
+        # Save file temporarily
+        filepath = os.path.join("uploads", file.filename)
+        file.save(filepath)
+        print(f"✅ File saved at {filepath}")
 
-        try:
-            # Save the uploaded file to /static/uploads
-            upload_folder = os.path.join('static', 'uploads')
-            os.makedirs(upload_folder, exist_ok=True)
-            image_path = os.path.join(upload_folder, imagefile.filename)
-            imagefile.save(image_path)
+        # Preprocess
+        img = load_img(filepath, target_size=(224, 224), color_mode='grayscale')
+        x = img_to_array(img) / 255.0
+        x = np.expand_dims(x, axis=0)
+        print("✅ Image preprocessed")
 
-            # Preprocess the image
-            img = load_img(image_path, target_size=(500, 500), color_mode='grayscale')
-            x = img_to_array(img) / 255.0
-            x = np.expand_dims(x, axis=0)
+        # Predict
+        prediction = model.predict(x)
+        print(f"✅ Prediction: {prediction}")
 
-            # Predict
-            probability = float(model.predict(x)[0][0])
-            is_positive = probability >= 0.5
-            label = "Positive for Pneumonia" if is_positive else "Healthy (Negative)"
-            confidence = probability * 100 if is_positive else (1 - probability) * 100
-            prediction_text = f"{label} ({confidence:.2f}%)"
+        return str(prediction)
 
-            # Debug: Print model output
-            print(f"[DEBUG] Raw model output: {model.predict(x)}")
-            print(f"[DEBUG] Prediction: {prediction_text}, probability: {probability}")
+    except Exception as e:
+        error_message = traceback.format_exc()
+        print("❌ ERROR during prediction:", error_message)
+        return f"Internal Server Error:\n{error_message}", 500
+        #     # Debug: Print model output
+        #     print(f"[DEBUG] Raw model output: {model.predict(x)}")
+        #     print(f"[DEBUG] Prediction: {prediction_text}, probability: {probability}")
 
-            # Save to session
-            session['diagnosis'] = prediction_text
+        #     # Save to session
+        #     session['diagnosis'] = prediction_text
 
-            # Save to prediction history
-            new_record = History(user_id=current_user.id, image_path=image_path, result=prediction_text)
-            db.session.add(new_record)
-            db.session.commit()
+        #     # Save to prediction history
+        #     new_record = History(user_id=current_user.id, image_path=image_path, result=prediction_text)
+        #     db.session.add(new_record)
+        #     db.session.commit()
 
-            return render_template('index.html', 
-                                   prediction=prediction_text, 
-                                   imagePath=image_path, 
-                                   confidence=confidence, 
-                                   is_positive=is_positive)
+        #     return render_template('index.html', 
+        #                            prediction=prediction_text, 
+        #                            imagePath=image_path, 
+        #                            confidence=confidence, 
+        #                            is_positive=is_positive)
 
-        except Exception as e:
-            print(f"[ERROR] Prediction failed: {e}")
-            flash("Prediction failed. Please try again.")
-            return redirect(request.url)
+        # except Exception as e:
+        #     print(f"[ERROR] Prediction failed: {e}")
+        #     flash("Prediction failed. Please try again.")
+        #     return redirect(request.url)
 
     # GET request
     return render_template('index.html')
