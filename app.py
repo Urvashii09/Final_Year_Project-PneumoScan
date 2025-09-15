@@ -58,7 +58,11 @@ def load_user(user_id):
 # --- Routes --- 
 @app.route('/') 
 def home(): 
-    return render_template('index.html') 
+    return render_template('index.html')
+
+@app.route("/ping")
+def ping():
+    return "Flask is alive ✅" 
 @app.route('/login', methods=['GET', 'POST']) 
 def login(): 
     if request.method == 'POST': 
