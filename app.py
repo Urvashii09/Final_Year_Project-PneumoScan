@@ -96,7 +96,6 @@ def logout():
     logout_user() 
     return redirect(url_for('home')) 
 @app.route('/predict', methods=['GET', 'POST'])
-@login_required
 def predict():
     try:
         if 'file' not in request.files:
